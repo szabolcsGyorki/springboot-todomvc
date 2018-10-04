@@ -1,9 +1,6 @@
 package com.codecool.todomvc.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Todo {
@@ -13,13 +10,15 @@ public class Todo {
     private long id;
     private String title;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private Status status;
 
-    private Todo(String title, Status status) {
+    public Todo(String title) {
         this.title = title;
-        this.status = status;
+        this.status = Status.ACTIVE;
     }
+
+    public Todo() {}
 
     public String getTitle() {
         return title;
@@ -47,9 +46,5 @@ public class Todo {
 
     public boolean isComplete() {
         return this.status == Status.COMPLETE;
-    }
-
-    public static Todo create(String title) {
-        return new Todo(title, Status.ACTIVE);
     }
 }
