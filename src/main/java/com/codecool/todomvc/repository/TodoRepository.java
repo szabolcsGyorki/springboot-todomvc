@@ -9,6 +9,4 @@ import java.util.List;
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
     List<Todo> findByStatus(Status status);
-
-    void deleteAllByStatus(Status status);
 }
