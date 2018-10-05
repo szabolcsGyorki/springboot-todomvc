@@ -35,10 +35,8 @@ public class TodoServiceREST {
     }
 
     @RequestMapping(value = "/todos/{id}/toggle_status", method = RequestMethod.PUT)
-    public String toggleTodo(@PathVariable("id") String id) {
-        Long todoId = Long.valueOf(id);
-        Optional<Todo> optionalTodo = todoRepository.findById(todoId);
-        Todo todo = optionalTodo.get();
+    public String toggleTodo(@PathVariable("id") Long id) {
+        Todo todo = getTodo(id);
         todo.setStatus(Status.COMPLETE);
         todoRepository.flush();
         return SUCCESS;
@@ -57,5 +55,30 @@ public class TodoServiceREST {
         List<Todo> completed = todoRepository.findByStatus(Status.COMPLETE);
         todoRepository.deleteAll(completed);
         return SUCCESS;
+    }
+
+    @RequestMapping(value = "/todos/{id}", method = RequestMethod.PUT)
+    public String editTodo(@PathVariable("id") Long id, @RequestParam("todo-title") String title) {
+        Todo todo = getTodo(id);
+        todo.setTitle(title);
+        todoRepository.flush();
+        return SUCCESS;
+    }
+
+    @RequestMapping(value = "/todos/{id}", method = RequestMethod.GET)
+    public String cancelEdit(@PathVariable("id") Long id) {
+        Todo todo = getTodo(id);
+        return todo.getTitle();
+    }
+
+    @RequestMapping(value = "/todos/{id}", method = RequestMethod.DELETE)
+    public String deleteTodo(@PathVariable("id") Long id) {
+        todoRepository.deleteById(id);
+        return SUCCESS;
+    }
+
+    private Todo getTodo(Long id) {
+        Optional<Todo> optionalTodo = todoRepository.findById(id);
+        return optionalTodo.get();
     }
 }
